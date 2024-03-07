@@ -39,15 +39,21 @@ public_users.get('/isbn/:isbn',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-    const title = req.params.title;
-    res.send(books[title]);
-  return res.status(300).json({message: "Yet to be implemented"});
+    var list_of_titles = {};
+    
+    for (let isbn_runner = 1; isbn_runner <= 10; isbn_runner++) {
+        if (books[isbn_runner]["title"] == req.params.title) {
+            list_of_titles[isbn_runner] = books[isbn_runner];
+        }
+    }
+  return res.status(300).json(list_of_titles);
 });
+
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    const isbn = req.params.isbn;
+    res.send(books[isbn]["reviews"]);
 });
 
 module.exports.general = public_users;

@@ -1,8 +1,10 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const session = require('express-session')
+const session = require('express-session');
+const { isValid } = require('./router/auth_users.js');
 const customer_routes = require('./router/auth_users.js').authenticated;
 const genl_routes = require('./router/general.js').general;
+let users = []; //added this for task 6 on March 11
 
 const app = express();
 
@@ -54,7 +56,7 @@ app.use("/customer/auth/*", function auth(req,res,next){
    const password = req.body.password;
  
    if (username && password) {
-     if (!doesExist(username)) { 
+     if (!isValid(username)) { //changed doesExist to isValid for Task 6 on March 11
        users.push({"username":username,"password":password});
        return res.status(200).json({message: "User successfully registred. Now you can login"});
      } else {

@@ -2,9 +2,10 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const { isValid } = require('./router/auth_users.js');
+//const { authenticatedUser } = require('./router/auth_users.js'); //added for task 7 on March 15
 const customer_routes = require('./router/auth_users.js').authenticated;
 const genl_routes = require('./router/general.js').general;
-let users = []; //added this for task 6 on March 11
+//let users = []; //added this for task 6 on March 11
 
 const app = express();
 
@@ -29,42 +30,42 @@ app.use("/customer/auth/*", function auth(req,res,next){
      }
  });
  
- app.post("/login", (req,res) => {
-   const username = req.body.username;
-   const password = req.body.password;
+ //app.post("/login", (req,res) => {
+   //const username = req.body.username;
+  // const password = req.body.password;
  
-   if (!username || !password) {
-       return res.status(404).json({message: "Error logging in"});
-   }
+  // if (!username || !password) {
+   //    return res.status(404).json({message: "Error logging in"});
+  // }
  
-   if (authenticatedUser(username,password)) {
-     let accessToken = jwt.sign({
-       data: password
-     }, 'access', { expiresIn: 60 * 60 });
+  // if (authenticatedUser(username,password)) {
+   //  let accessToken = jwt.sign({
+   //    data: password
+   //  }, 'access', { expiresIn: 60 * 60 });
  
-     req.session.authorization = {
-       accessToken,username
-   }
-   return res.status(200).send("User successfully logged in");
-   } else {
-     return res.status(208).json({message: "Invalid Login. Check username and password"});
-   }
- });
+   //  req.session.authorization = {
+   //    accessToken,username
+  // }
+  // return res.status(200).send("User successfully logged in");
+  // } else {
+ //    return res.status(208).json({message: "Invalid Login. Check username and password"});
+ //  }
+ //});
  
- app.post("/register", (req,res) => {
-   const username = req.body.username;
-   const password = req.body.password;
+// app.post("/register", (req,res) => {
+ //  const username = req.body.username;
+ //  const password = req.body.password;
  
-   if (username && password) {
-     if (!isValid(username)) { //changed doesExist to isValid for Task 6 on March 11
-       users.push({"username":username,"password":password});
-       return res.status(200).json({message: "User successfully registred. Now you can login"});
-     } else {
-       return res.status(404).json({message: "User already exists!"});    
-     }
-   } 
-   return res.status(404).json({message: "Unable to register user."});
- });
+ //  if (username && password) {
+ //    if (!isValid(username)) { //changed doesExist to isValid for Task 6 on March 11, removed ! from !isValid for Task 6 on March 15
+  //     users.push({"username":username,"password":password});
+ //      return res.status(200).json({message: "User successfully registred. Now you can login"});
+ //    } else {
+ //      return res.status(404).json({message: "User already exists!"});    
+ //    }
+ //  } 
+ //  return res.status(404).json({message: "Unable to register user."});
+// });
  
  
 const PORT =5000;

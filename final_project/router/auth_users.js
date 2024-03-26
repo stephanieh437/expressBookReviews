@@ -40,7 +40,7 @@ regd_users.post("/login", (req,res) => {
         if (authenticatedUser(username,password)) {
           let accessToken = jwt.sign({
             data: password
-          }, 'access', { expiresIn: 60 * 60 });
+          }, 'access', { expiresIn: 600 * 600 });
       
           req.session.authorization = {
             accessToken,username
@@ -70,10 +70,35 @@ regd_users.post("/register", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
-});
+    const isbn = req.params.isbn;
+    let book = books[isbn]
+    if (book) { //Check is friend exists
+        let reviews = req.body.reviews
 
+        //if DOB the DOB has been changed, update the DOB 
+        if(reviews) {
+            book["reviews"] = reviews
+        }
+        
+        books[isbn]=book;
+        res.send(`Book with the isbn  ${isbn} updated.`);
+    }
+    else{
+        res.send("Unable to find book!");
+    }
+  });
+ // return res.status(300).json({message: "Yet to be implemented"});
+
+ // DELETE request: Delete a review by isbn
+ regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn;
+    let reviews = req.body.reviews;
+    if (isbn){
+        delete books[reviews]
+    }
+    res.send(`Review of the book with the isbn  ${isbn} deleted.`);
+  });
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
+
